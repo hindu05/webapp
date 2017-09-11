@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metronom WebApp</title>
+<link rel="shortcut icon" type="image/ico" href="img/favicon.ico">
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div id="bg"></div>
+<div id="wrap">
+
+	<header>
+		<h1>Metronome</h1>
+	</header>
+	<article>
+		<section id="circleMeter">
+			<div id="needle"></div>
+			<div id="lineThrough"></div>
+			<p id="bpmCount"><span id="bpm">BPM</span><span id="bpmNumber">120</span></p>
+		</section>
+		<section id="controls">
+			<input id="num" placeholder="BPM" type="text" />
+			<button id="commitBpm">ok</button>
+			<!--p id="meterBtn">Meter</p--> <br/>
+			<p id="soundBtnText">Sound</p>
+			<button id="onOff">Off</button>
+		</section>
+	</article>
+</div>
+<footer>
+	Copyright © <span>Andreas Nielsen</span> 2017
+</footer>
+<script src="js/custom.js"></script>
+</body>
+</html>
