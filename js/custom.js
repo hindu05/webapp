@@ -102,11 +102,6 @@ var taps = [];
 
 circle.onclick = function () {
 	
-	// https://stackoverflow.com/questions/31985051/safari-not-firing-touch-events
-	//should help increase touch performance
-	event.stopPropagation();
-		event.preventDefault();
-
 	t0 = performance.now();
 	t1 = performance.now();
 
