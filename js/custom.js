@@ -1,3 +1,12 @@
+//variables
+var speakerRay = document.getElementsByClassName("speaker_ray");
+var highClick = new Audio('high.wav');
+var lowClick = new Audio('low.wav');
+var sound = document.getElementById("speaker");
+var count = 1;
+var measure = 4;
+var circle = document.getElementById('circleMeter');
+var indicator = document.getElementById('indicator');
 
 //fastclick script to eliminate 300ms lag on iOS iphone devices https://github.com/ftlabs/fastclick
 //apparently fixed some of the sound issues i had on iOS. (?)
@@ -5,29 +14,17 @@ if ('addEventListener' in document) {
 	document.addEventListener('DOMContentLoaded', function() {
 		FastClick.attach(document.body);
 		console.log('FastClick loaded');
+
+		clickInterval = setInterval(playTime, (60000 / 120));
+		//speaker rays hide
+		for (i in speakerRay){
+		speakerRay[i].style.opacity = 0;
+		}
+		//start metronome
+		
 	}, false);
+
 }
-
-/*function initAnim() {
-	var ol = document.getElementById("overlay")
-	var overlay1 = document.getElementById("olBg1");
-	var overlay2 = document.getElementById("olBg2");
-	var intro = document.getElementById("intro");
-
-	overlay1.style.transform = 'translate(-100vw)';
-	overlay2.style.transform = 'translate(-100vw)';
-	intro.style.transform = 'translate(-100vw)';
-};
-
-setTimeout(initAnim, 1000);*/
-
-//click sound
-var highClick = new Audio('high.wav');
-var lowClick = new Audio('low.wav');
-var soundOff = document.getElementById("off");
-var soundOn = document.getElementById("on");
-var count = 1;
-var measure = 4;
 
 //figure out and/or change time measurement
 document.getElementById("meas").onchange = function changeMeasurement(){
@@ -35,48 +32,48 @@ document.getElementById("meas").onchange = function changeMeasurement(){
 };
 //play the selected tempo, in selected time measurement.
 //play high pitched click on count 1, low pitch on the rest.
-function playLow() {
+function playTime() {
 	count++;
-	if (soundOff.classList.contains("inactive")) {
+	
 
 		if (count == 1) {
-			highClick.play();
 			blink();
+			if (sound.classList.contains("active")) {highClick.play();}
 		}
 		else if(count > measure){
-			highClick.play();
 			count = 1;
 			blink();
+			if (sound.classList.contains("active")) {highClick.play();}
 		}
 		else {
-			lowClick.play();
 			blinkAll();
+			if (sound.classList.contains("active")) {lowClick.play();}
 		} 
-	}
+	
 };
 
 //blink and blinkback
 function blink( )
 {
-	document.getElementById("circleMeter").style.backgroundColor ="#323232";
-	document.getElementById("indicator").style.backgroundColor ="#f33";
+	circle.style.backgroundColor ="#323232";
+	indicator.style.backgroundColor ="#f33";
 	setTimeout(blinkBack, 100);
 	
 };
 
 function blinkBack( )
 {
-	document.getElementById("circleMeter").style.backgroundColor ="#212121";
-	document.getElementById("indicator").style.backgroundColor ="#2e2f2e";
+	circle.style.backgroundColor ="#212121";
+	indicator.style.backgroundColor ="#2e2f2e";
 };
 //indicator blink on everything else
 function blinkAll() {
-	document.getElementById("indicator").style.backgroundColor ="#77aa11";
+	indicator.style.backgroundColor ="#77aa11";
 	setTimeout(blinkBack, 50);
 };
 
 //changing the tempo, parse and set inteval accordingly
-var lowInterval;
+var clickInterval;
 var blinkInt;
 
 document.getElementById("num").onchange = function changeTempo(){
@@ -91,77 +88,73 @@ document.getElementById("num").onchange = function changeTempo(){
 	document.getElementById("bpmNumber").innerHTML = numBpm;
 	/*loop*/
 	
-	clearInterval(lowInterval);
-	var lowTime = ( timeInMs / 2 );
-	lowInterval = setInterval(playLow, lowTime);
+	clearInterval(clickInterval);
+	var clickTime = ( timeInMs / 2 );
+	clickInterval = setInterval(playTime, clickTime);
 	
 };
-
-
 
 //'tap tempo'
 //help from https://stackoverflow.com/questions/30795525/performance-now-vs-date-now
 
 var taps = [];
-var element = document.getElementById('circleMeter');        
- 	detect = 1;
- 
+	detect = 1;
 
-    	
+circle.onclick = function () {
+	
+	// https://stackoverflow.com/questions/31985051/safari-not-firing-touch-events
+	//should help increase touch performance
+	event.stopPropagation();
+		event.preventDefault();
 
+	t0 = performance.now();
+	t1 = performance.now();
 
-    element.onclick = function () {
-    	
-    	// https://stackoverflow.com/questions/31985051/safari-not-firing-touch-events
-    	event.stopPropagation();
-   		event.preventDefault();
+	if (detect == 1) {
+		//start timing now
+		detect++;
+		start = t0;
+		
+	} else {
+		//stop
+		end = t1;		
+  		detect = 1; 
+	}
+		//calc difference
+		var timeDiff = Math.abs(start - end);
 
-		t0 = performance.now();
-		t1 = performance.now();
+		   //calc bpm
+		tapToBpm = Math.round(60000 / timeDiff);
+		//somehow get the metronome to play new tempo
+		document.getElementById("bpmNumber").innerHTML = tapToBpm;
 
-    	if (detect == 1) {
-    		//start timing now
-    		detect++;
-    		start = t0;
-    		
-
-    	} else {
-			//stop
-			end = t1;		
-	  		detect = 1; 
-    	}
-			//calc difference
-			var timeDiff = Math.abs(start - end);
-
- 		   //calc bpm
-			tapToBpm = Math.round(60000 / timeDiff);
-			//somehow get the metronome to play new tempo
-			document.getElementById("bpmNumber").innerHTML = tapToBpm;
-
-			//set inteval her
-			clearInterval(lowInterval);
-			lowInterval = setInterval(playLow, timeDiff);
-			document.getElementById('needle').style.webkitAnimationDuration = (timeDiff * 2) + "ms";
-    };
-
-
-
+		//set inteval here
+		clearInterval(clickInterval);
+		clickInterval = setInterval(playTime, timeDiff);
+		document.getElementById('needle').style.webkitAnimationDuration = (timeDiff * 2) + "ms";
+};
 
 
 //sound on off
+sound.onclick = function() {
 
-document.getElementById("onOff").onclick = function() {
-	if (soundOff.classList.contains("inactive")) {
-		soundOff.classList.remove("inactive");
-		soundOn.classList.add("inactive");
+	if (sound.classList.contains("active")) {
+		sound.classList.remove("active");
+		for (i in speakerRay){
+		speakerRay[i].style.opacity = 0;
+		speakerRay[i].classList.remove("speaker_ray-animate")
+		}
 	}
 	else {
-		soundOff.classList.add("inactive");
-		soundOn.classList.remove("inactive");
+		
+		sound.classList.add("active");
+		for (i in speakerRay){
+		//speakerRay[i].style.opacity = 1;
+		speakerRay[i].classList.add("speaker_ray-animate")
+		}
 	}
-
-
 };
+
 var controls = document.getElementById("controls");
 var title = document.getElementById("title");
 function blur(){
@@ -180,25 +173,3 @@ document.onmousemove = function(){
   	timeout = setTimeout(blur, 5000);
 	}
 };
-
-
-
-
-//detect input bpm
-/*var bpmInput = document.getElementById('num');
-
-setInterval(function() { ObserveInputValue(bpmInput.value); }, 100);
-
-function ObserveInputValue() {
-	alert('imput changed');
-};
-
-
-
-
-    element.onmousedown = function () {
-      var timeNow = (new Date()).getTime();
-      
-      //taps.push(timeNow)
-      //console.log(taps);
-    };*/

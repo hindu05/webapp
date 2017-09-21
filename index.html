@@ -5,38 +5,34 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!-- https://stackoverflow.com/questions/6483425/prevent-iphone-from-zooming-in-on-select-in-web-app -->
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Metronom WebApp</title>
+<title>TICK Metronome</title>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico">
 <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-<!--div id="overlay">
-	<div id="olBg1"></div>
-	<div id="olBg2"></div>
-	<h1 id="intro" class="shadow">Metronome</h1>
-</div-->
 <div id="bg"></div>
 <container id="wrap">
 	<header>
-		<h1 id="title">Metronome</h1>
+		<h1 id="title">tick</h1>
 	</header>
 	<main>
 		<div id="indicator"></div>
-		<section id="circleMeter">
+		<section id="circleMeter" title="Tap for tempo">
 			<div id="needle"></div>
 			<div id="lineThrough"></div>
 			<p id="bpmCount"><span id="bpm">BPM</span><span id="bpmNumber">120</span></p>
 		</section>
 		<section id="controls">
-			<input id="num" type="tel" onfocus="this.value='';"  placeholder="BPM" type="text" />
-			<!--button id="commitBpm">ok</button-->
-			<input id="meas" type="tel" onfocus="this.value='';" placeholder="4" type="text" /><p id="measTxt">/4</p>
-
-			<!--p id="meterBtn">Meter</p--> <br/>
-			<section id="sound">
-				<img src="speaker.png" id="speaker" alt="speaker icon">
-				<button id="onOff"><span class="inactive" id="on">On</span> <span id="off">Off</span></button>
-			</section>
+			<figure id="speaker" alt="speaker icon">
+				<img src="speakercone.png" class="speaker" alt="speakercone">
+				<img src="ray1.png" class="speaker_ray" alt="soundwave">
+				<img src="ray2.png" class="speaker_ray" alt="soundwave">
+				<img src="ray3.png" class="speaker_ray" alt="soundwave">
+			</figure>
+			<input id="num" type="tel" maxlength="3" onfocus="this.value='';"  placeholder="BPM" type="text" />
+			<section id="measurement">
+				<input id="meas" type="tel" maxlength="2" onfocus="this.value='';" placeholder="4" type="text" /><p id="measTxt">/4</p>		
+			</section>	
 		</section>
 	</main>
 </container>
